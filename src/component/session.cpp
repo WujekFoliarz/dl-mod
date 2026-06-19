@@ -103,6 +103,8 @@ namespace session
 
             current_map = function_loader::call<const char*>("ILevel::GetLevelName", level);
 
+            // So this actually takes StatusDL of the latest player that joined
+            // This isn't yours if you're playing in coop!
             auto session = game::gamedll_x64_rwdi::Sessions::StatusDL::get_dl_status();
             if (session)
             {
