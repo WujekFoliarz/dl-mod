@@ -1,0 +1,9 @@
+[submodule "deps/minhook"]
+	path = deps/minhook
+	url = https://github.com/tsudakageyu/minhook
+[submodule "deps/discord-rpc"]
+	path = deps/discord-rpc
+	url = https://github.com/discord/discord-rpc/
+[submodule "deps/discord-presence"]
+	path = deps/discord-presence
+	url = https://github.com/EclipseMenu/discord-presence
