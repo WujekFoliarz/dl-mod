@@ -3,6 +3,8 @@
 #include "structs.hpp"
 
 void* g_pGame = nullptr;
+game::gamedll_x64_rwdi::Sessions::StatusDL::status_dl_list sessions;
+std::mutex sessions_lock;
 
 void *game::gamedll_x64_rwdi::IGame::hooked_game_ctor(void *a1)
 {
@@ -17,17 +19,26 @@ game::engine_x64_rwdi::IGame::impl::IGame *game::gamedll_x64_rwdi::IGame::get_ga
     return static_cast<game::engine_x64_rwdi::IGame::impl::IGame*>(g_pGame);
 }
 
-game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL* g_pStatus = nullptr;
 void *game::gamedll_x64_rwdi::Sessions::StatusDL::hooked_status_ctor(game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL* this_)
 {
     auto result = original_status_ctor(this_);
-    g_pStatus = this_;
-    std::cout << "StatusDL constructed: " << g_pStatus << std::endl;
+    std::lock_guard<std::mutex> lock(sessions_lock);
+    sessions.push_back(this_);
+    std::cout << "StatusDL constructed: " << this_ << std::endl;
     return result;
 }
 
-game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL *game::gamedll_x64_rwdi::Sessions::StatusDL::get_dl_status()
+game::gamedll_x64_rwdi::Sessions::StatusDL::status_dl_list game::gamedll_x64_rwdi::Sessions::StatusDL::get_status_dl()
 {
-    return g_pStatus;
+    std::lock_guard<std::mutex> lock(sessions_lock);
+    std::erase_if(sessions, [](game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL* s)
+    {
+        return !s || 
+        (s->m_Team != game::engine_x64_rwdi::Sessions::StatusDL::ETeam::Default && 
+        s->m_Team != game::engine_x64_rwdi::Sessions::StatusDL::ETeam::Zombie);
+    });
+    std::erase(sessions, nullptr);
+
+    return sessions;
 }
 

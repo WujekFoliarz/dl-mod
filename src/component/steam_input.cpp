@@ -4,7 +4,6 @@
 
 namespace steam_input
 {
-
 	namespace 
 	{
 
@@ -22,11 +21,6 @@ namespace steam_input
 		{
 
 		}
-
-        void update() override
-        {
-
-        }
 	};
 }
 

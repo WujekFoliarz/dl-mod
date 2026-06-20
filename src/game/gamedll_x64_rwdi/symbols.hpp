@@ -10,7 +10,7 @@ namespace game
         {
             { "IGame::ctor",                static_cast<uint32_t>(0x1811120F0u - IDA_BASE_IMAGE) },
             { "Sessions::StatusDL::ctor",   static_cast<uint32_t>(0x180F30E50u - IDA_BASE_IMAGE) },
-            { "LobbyState",                 static_cast<uint32_t>(0x180F30F90u - IDA_BASE_IMAGE) },
+            { "GameDI::OnFrame",            static_cast<uint32_t>(0x1804408D0u - IDA_BASE_IMAGE) },
         };
     }
 }

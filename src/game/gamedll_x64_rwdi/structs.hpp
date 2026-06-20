@@ -14,7 +14,9 @@ namespace game
                 inline t_status_ctor original_status_ctor = nullptr;
 
                 void* hooked_status_ctor(game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL* this_);
-                game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL* get_dl_status();
+                
+                using status_dl_list = std::vector<game::engine_x64_rwdi::Sessions::StatusDL::impl::StatusDL*>;
+                game::gamedll_x64_rwdi::Sessions::StatusDL::status_dl_list get_status_dl();
             }
         }
 
@@ -40,6 +42,12 @@ namespace game
             inline t_LobbyState original_LobbyState = nullptr;
 
             game::engine_x64_rwdi::IGame::impl::IGame* get_game();
+        }
+
+        namespace GameDI
+        {
+            typedef void(__fastcall* t_OnFrame)(void* a1);
+            inline t_OnFrame org_OnFrame = nullptr;
         }
     }
 }

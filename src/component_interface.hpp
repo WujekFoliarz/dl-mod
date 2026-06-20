@@ -23,10 +23,6 @@ public:
 	{
 	}
 
-    virtual void update()
-    {
-    }
-
 	virtual void post_start()
 	{
 	}

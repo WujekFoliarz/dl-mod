@@ -2,6 +2,7 @@
 #include "component_loader.hpp"
 #include <discord-rpc.hpp>
 #include "session.hpp"
+#include "scheduler.hpp"
 
 namespace discord
 {
@@ -47,26 +48,8 @@ namespace discord
                     std::cout << std::format("[discord] error with code {} - {}", errcode, message) << std::endl;
                 });
         }
-	}
 
-	class component final : public component_interface
-	{
-	public:
-		void pre_load() override
-		{
-
-		}
-
-		void start() override
-		{
-            std::cout << "[discord] starting" << std::endl;
-            discord_setup();
-            discord::RPCManager::get().initialize();
-            std::cout << "[discord] started" << std::endl;
-            start_time = time(nullptr);
-		}
-
-        void update() override
+        void update_discord()
         {
             auto& rpc = discord::RPCManager::get();
             if (!send_presence) 
@@ -160,6 +143,30 @@ namespace discord
                 .setInstance(false)
                 .refresh();
         }
+	}
+
+	class component final : public component_interface
+	{
+	public:
+		void pre_load() override
+		{
+
+		}
+
+		void start() override
+		{
+            std::cout << "[discord] starting" << std::endl;
+
+            scheduler::once([]{
+                discord_setup();
+                discord::RPCManager::get().initialize();
+            }, scheduler::main);
+
+            scheduler::loop(update_discord, scheduler::main, std::chrono::milliseconds(100));
+
+            std::cout << "[discord] started" << std::endl;
+            start_time = time(nullptr);
+		}
 	};
 }
 

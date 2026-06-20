@@ -7,7 +7,8 @@
 #include "component_loader.hpp"
 
 // 180091C00
-// 180F30F90
+// 180F30F90 <- check these out later
+
 void hook_game_ctor()
 {
     HMODULE hGame = nullptr;
@@ -56,14 +57,6 @@ void start()
 
 	component_loader::start();
 	component_loader::post_start();
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    while(running)
-    {
-        component_loader::update();
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    }
 }
 
 BOOL WINAPI DllMain(

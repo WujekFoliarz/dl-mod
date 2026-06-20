@@ -15,6 +15,8 @@
 #include <functional>
 #include <mutex>
 #include <map>
+#include <iterator>
+#include <cassert>
 
 inline constexpr uint32_t IDA_BASE_IMAGE = 0x180000000u;
 

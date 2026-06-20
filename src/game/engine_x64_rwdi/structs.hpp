@@ -15,6 +15,9 @@ namespace game
                     char levelName[64];
                 };
             }
+
+            typedef const char*(__fastcall* t_GetLevelName)(impl::ILevel* level);
+            inline t_GetLevelName org_GetLevelName = nullptr;
         }
 
         namespace Sessions
@@ -41,7 +44,8 @@ namespace game
                     Connecting=1,
                     Connected_LoadingLevel=2, 
                     Connected_LevelLoaded=3, 
-                    Disconnecting=4
+                    Disconnecting=4,
+                    Invalid = 5
                 };
 
                 enum class ELobbyNAT : int 
@@ -180,7 +184,8 @@ namespace game
                 {
                     struct StatusDL 
                     {
-                        uint8_t gameobject[0x40];
+                        void* GameObject;
+                        uint8_t gameobject[0x38];
 
                         uint8_t _pad3[0x4];
 

@@ -74,14 +74,6 @@ void component_loader::start()
 	}
 }
 
-void component_loader::update()
-{
-    for (const auto& component_ : get_components())
-	{
-		component_->update();
-	}
-}
-
 void component_loader::post_start()
 {
 	static auto handled = false;
