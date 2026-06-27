@@ -8,7 +8,6 @@ Improvements and fixed for Dying Light
 # Planned features
 - DualSense/Dualshock4 integration
 - Disable text chat
-- Skip game selection splashscreen
 
 # Screenshots
 <img width="326" height="158" alt="obraz" src="https://github.com/user-attachments/assets/2d3f0339-08b8-49a1-aa74-305f97948ba4" />
