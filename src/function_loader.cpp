@@ -9,7 +9,15 @@ namespace function_loader
 
     void* get_function_address(const std::string &function_name)
     {
-        return function_map.at(function_name);
+        auto result = function_map.at(function_name);
+
+        if (!result)
+        {
+            MessageBoxA(0, "Error", std::format("Failed to get function address: {}", function_name).c_str(), MB_ICONERROR);
+            return nullptr;
+        }
+
+        return result;
     }
 
     void load_functions()

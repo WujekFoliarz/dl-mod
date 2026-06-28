@@ -66,6 +66,11 @@ namespace session
             }
             return result;
         }
+
+        //game::engine_x64_rwdi::CampaignManager::impl::CampaignManager* get_campaign_manager_instance_stub()
+        //{
+        //
+        //}
 	}
 
 	class component final : public component_interface
@@ -96,8 +101,6 @@ namespace session
 
             MH_CreateHook((void*)function_loader::get_function_address("ILevel::GetLevelName"), reinterpret_cast<void*>(&GetLevelName_stub), (void**)&game::engine_x64_rwdi::ILevel::org_GetLevelName);
             MH_EnableHook((void*)function_loader::get_function_address("ILevel::GetLevelName"));
-
-            //scheduler::loop(update_session_info, scheduler::pipeline::main, std::chrono::milliseconds(0));
 
             std::cout << "[session] started" << std::endl;
 		}
@@ -131,35 +134,35 @@ namespace session
         return false;
     }
 
-    bool is_playing_as_zombie()
-    {  
-        bool zombie_peer_present = false;
-        {        
-            std::lock_guard lock(connected_peers_lock); 
-            for(auto& [peer_id, team] : connected_peers)
-            {
-                if (team == game::engine_x64_rwdi::Sessions::StatusDL::ETeam::Zombie)
-                {
-                    zombie_peer_present = true;
-                }
-            }
-        }
-
-        auto sessions = game::gamedll_x64_rwdi::Sessions::StatusDL::get_status_dl();
-        for (auto& session : sessions)
-        {
-            if (session->m_Team == game::engine_x64_rwdi::Sessions::StatusDL::ETeam::Zombie && !zombie_peer_present)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     int32_t get_player_count()
     {
         return connected_peers.size() + 1;
+    }
+
+    bool is_night_hunter()
+    {
+        __int64 base    = *(__int64*)(function_loader::get_function_address("GSesssion"));
+        __int64 session = *(__int64*)(base + 1344);
+        if (!session) return false;
+
+        __int64 unk = *(__int64*)(session + 72);
+        if (!unk) return false;
+
+        __int64 playerObj = *(__int64*)(unk + 2520);
+        if (!playerObj) return false;
+
+        return *(int*)(playerObj + 1760) == 2;
+    }
+
+    int get_game_visibility()
+    {
+        __int64 base = *(__int64*)(function_loader::get_function_address("GSesssion"));
+        if (!base) return -1;
+
+        using Fn = int(__fastcall*)(__int64);
+        auto vtable = *(__int64*)(base);
+        auto fn = *(Fn*)(vtable + 2240);
+        return fn(base);
     }
 }
 

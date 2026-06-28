@@ -1,5 +1,6 @@
 #include <pch.hpp>
 #include "structs.hpp"
+#include "structs.hpp"
 
 std::string game::engine_x64_rwdi::Sessions::StatusDL::ETeam_to_string(ETeam Type)
 {

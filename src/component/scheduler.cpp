@@ -88,7 +88,8 @@ namespace scheduler
                 }
         };
 
-        std::thread thread;
+        volatile bool kill = false;
+        std::jthread thread;
 		task_pipeline pipelines[pipeline::count];
 
 		void execute(const pipeline type)
@@ -149,6 +150,11 @@ namespace scheduler
             MH_EnableHook(function_loader::get_function_address("GameDI::OnFrame"));
             std::cout << "[scheduler] started" << std::endl;
 		}
+
+        void end() override
+        {
+            kill = true;
+        }
 	};
 }
 

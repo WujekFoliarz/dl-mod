@@ -3,6 +3,8 @@
 #include <discord-rpc.hpp>
 #include "session.hpp"
 #include "scheduler.hpp"
+#include "function_loader.hpp"
+#include "game/gamedll_x64_rwdi/structs.hpp"
 
 namespace discord
 {
@@ -75,7 +77,7 @@ namespace discord
             {
                 small_image = "";
             }
-            else if (session::is_playing_as_zombie())
+            else if (session::is_night_hunter())
             {
                 small_image = "hunter";
             }
@@ -95,7 +97,7 @@ namespace discord
                 pretty_map_name = "";
             }
 
-            bool is_playing_as_zombie = session::is_playing_as_zombie();
+            bool is_playing_as_zombie = session::is_night_hunter();
             bool is_being_invaded_while_human = session::is_being_invaded_while_human();
 
             if (last_valid_current_map == "menu_lvl_new")
@@ -167,6 +169,11 @@ namespace discord
             std::cout << "[discord] started" << std::endl;
             start_time = time(nullptr);
 		}
+
+        void end() override
+        {
+            discord::RPCManager::get().shutdown();
+        }
 	};
 }
 

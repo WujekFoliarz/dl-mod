@@ -27,12 +27,8 @@ void hook_game_ctor()
     );
     auto status = MH_CreateHook(ctorAddr, reinterpret_cast<void*>(&game::gamedll_x64_rwdi::IGame::hooked_game_ctor), reinterpret_cast<void**>(&game::gamedll_x64_rwdi::IGame::original_game_ctor));
     status = MH_EnableHook(ctorAddr);
-
-    MH_CreateHook(function_loader::get_function_address("Sessions::StatusDL::ctor"), reinterpret_cast<void*>(&game::gamedll_x64_rwdi::Sessions::StatusDL::hooked_status_ctor), (void**)&game::gamedll_x64_rwdi::Sessions::StatusDL::original_status_ctor);
-    MH_EnableHook(function_loader::get_function_address("Sessions::StatusDL::ctor"));
 }
 
-std::atomic<bool> running = true;
 void start()
 {
     // console FIRST
@@ -59,6 +55,12 @@ void start()
 	component_loader::post_start();
 }
 
+void destroy()
+{
+	component_loader::end();
+    FreeConsole();
+}
+
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
     DWORD fdwReason,     // reason for calling function
@@ -74,12 +76,7 @@ BOOL WINAPI DllMain(
             break;
 
         case DLL_PROCESS_DETACH:
-            running = false;
-            if (lpvReserved != nullptr)
-            {
-                break; 
-            }
-            
+            destroy();
             break;
     }
     return TRUE;  

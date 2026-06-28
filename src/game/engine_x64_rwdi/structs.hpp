@@ -4,6 +4,48 @@ namespace game
 {
     namespace engine_x64_rwdi
     {
+        namespace CampaignManager
+        {
+            namespace impl
+            {
+                struct CampaignManager
+                {
+                    void*   vftable;            // +0x00
+                    void*   unknown0;           // +0x08
+                    void*   vftable2;           // +0x10
+                    void*   unknown1;           // +0x18
+                    int     vector1_capacity;   // +0x20  = 30
+                    int     pad0;               // +0x24
+                    int     currentCampaignId;  // +0x28  = INVALID initially
+                    int     pendingCampaignId;  // +0x2C  = INVALID initially
+                    uint8_t flag;               // +0x30  = 1
+                };
+            }
+        }
+
+        namespace PlayerDI
+        {
+            namespace impl
+            {
+                struct PlayerDI_vftable
+                {
+
+                };
+
+                #pragma pack(push, 1)
+                struct PlayerDI
+                {
+                    PlayerDI_vftable* vtable;
+                    char _pad1[3508];
+                    uint32_t m_ControllerGroupSpecialization;
+                    char _pad2[160789];
+                };
+                #pragma pack(pop)
+
+                static_assert(sizeof(PlayerDI) == 164309, "PlayerDI size mismatch! Expected 164309 bytes.");
+            }   
+        }
+
         namespace ILevel
         {
             namespace impl
